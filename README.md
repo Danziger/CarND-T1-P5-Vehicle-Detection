@@ -39,10 +39,13 @@ A well written README file can enhance your project and portfolio.  Develop your
 ## Interesting reads
 
 - What are the advantages of different classification algorithms?
+  
   https://www.quora.com/What-are-the-advantages-of-different-classification-algorithms
   
 - An Empirical Comparison of Supervised Learning Algorithms
+  
   http://www.cs.cornell.edu/~caruana/ctp/ct.papers/caruana.icml06.pdf
   
 - Python Data Science Handbook (especially chapters 4. Visualization with Matplotlib and 5. Machine Learning)
+  
   https://www.safaribooksonline.com/library/view/python-data-science/9781491912126/
