@@ -100,7 +100,7 @@ I created 3 window grids of different sizes:
   </tr>
 </table>
 
-An this is how all 3 come together:
+And this is how all 3 come together:
 
 ![alt text][image3]
 
