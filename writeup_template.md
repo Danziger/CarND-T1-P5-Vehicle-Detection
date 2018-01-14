@@ -130,10 +130,13 @@ Once I was happy with the result, the final configuration was added to [constant
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working. What did you do to optimize the performance of your classifier?
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+Ultimately I searched on 3 scales using HLS 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.
+
+Here are some example images:
 
 ![alt text][image4]
 
+A method, such as requiring that a detection be found at or near the same position in several subsequent frames, (could be a heat map showing the location of repeat detections) is implemented as a means of rejecting false positives, and this demonstrably reduces the number of false positives. Same or similar method used to draw bounding boxes (or circles, cubes, etc.) around high-confidence detections where multiple overlapping detections occu
 
 ### Video Implementation
 
