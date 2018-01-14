@@ -76,9 +76,22 @@ The feature extraction and training of my classifier all happens in [Feature Ext
 
 The parameters used for the feature extraction: spatial binning, histograms of color and HOG features, were all adjusted in the online Udacity playgrounds that we saw during the lectures. The same parameters I found usefull there were used here, even though I end up using HLS color space, instead of the one I was using initially, HVS, that was the one those params were adjusted for.
 
-The datasets were split in training and test 80%/20%. Then, a `Pipeline` as created in order to hold both the scaler (`StandardScaler`) and the classifier (`LinearSVC`) and be able to save both of them together (last cell of the Notebook).
+The datasets were split in training and test 80%/20%. Then, a `Pipeline` as created in order to hold both the scaler (`StandardScaler`) and the classifier (`LinearSVC`) and be able to save/load both of them together (last cell of the Notebook).
 
-...
+Once the classifier is trained, the Notebook will output its training time, training and test accuracies, prediction time and confusion matrix. Based on those metrics, I tried out different classifiers with different params. Without getting into too much detail about the params here (they can be found in a comment in the corresponding cell in the Notebook), the classifiers that I have tried are:
+
+- `LinearSVC`.
+- `SVC` with linear kernel.
+- `SVC` with rbf kernel.
+- `SVC` with poly kernel.
+- `DecisionTreeClassifier`.
+- `RandomForestClassifier`.
+- `AdaBoostClassifier`.
+- `GaussianNB`.
+
+All but `GaussianNB` produced models with accuracies above 95% and the `SVC` with rbf kernel got a 99.13% accuracy in test! However, `SVC` was slow both training and making predictions. Actually, all the classifiers (except `GaussianNB`) were slower than `LinearSVC`, being `AdaBoostClassifier` the slowest one.
+
+I finally decided to use `LinearSVC` with `loss="hinge"` as it was getting a 98.59% accuracy while training and predicting in a relatively short time.
 
 ### Sliding Window Search
 
