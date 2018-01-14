@@ -67,14 +67,14 @@ I didn't write down the whole set of combinations that I tried, but the one that
 - `12` pixels per cell.
 - `2` cells per block
 
-However, I end up using a different color space (HLS) and assuming those values would still work good with it, which I actually verified by visually inspecting the results on the test video.
+However, I ended up using a different color space (HLS) and assuming those values would still work good with it, which I actually verified by visually inspecting the results on the test video.
 
 
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
 The feature extraction and training of my classifier all happens in [Feature Extraction & Classifier Creation and Training.ipynb](src/notebooks/Feature%20Extraction%20%26%20Classifier%20Creation%20and%20Training.ipynb), especifically in [Section 2 - Extract Features](src/notebooks/Feature%20Extraction%20%26%20Classifier%20Creation%20and%20Training.ipynb#2.-EXTRACT-FEATURES) and [Section 3 - Train Classifier (SVM)](src/notebooks/Feature%20Extraction%20%26%20Classifier%20Creation%20and%20Training.ipynb#3.-TRAIN-CLASSIFIER-(SVM)), respectively.
 
-The parameters used for the feature extraction: spatial binning, histograms of color and HOG features, were all adjusted in the online Udacity playgrounds that we saw during the lectures. The same parameters I found usefull there were used here, even though I end up using HLS color space, instead of the one I was using initially, HVS, that was the one those params were adjusted for.
+The parameters used for the feature extraction: spatial binning, histograms of color and HOG features, were all adjusted in the online Udacity playgrounds that we saw during the lectures. The same parameters I found usefull there were used here, even though I ended up using HLS color space, instead of the one I was using initially, HVS, that was the one those params were adjusted for.
 
 The datasets were split in training and test 80%/20%. Then, a `Pipeline` as created in order to hold both the scaler (`StandardScaler`) and the classifier (`LinearSVC`) and be able to save/load both of them together (last cell of the Notebook).
 
