@@ -132,11 +132,20 @@ Once I was happy with the result, the final configuration was added to [constant
 
 Ultimately I searched on 3 scales using HLS 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.
 
-Here are some example images:
+Here are some example predictions before filtering them with heatmaps, as returned by [`finder.py:10-45 (find_cars)` ](src/helpers/finder.py):
 
 ![alt text][image4]
 
-A method, such as requiring that a detection be found at or near the same position in several subsequent frames, (could be a heat map showing the location of repeat detections) is implemented as a means of rejecting false positives, and this demonstrably reduces the number of false positives. Same or similar method used to draw bounding boxes (or circles, cubes, etc.) around high-confidence detections where multiple overlapping detections occu
+As mentioned before, plenty of different classifiers, params and color spaces have been considered and tested in order to generate a model that is either accurate and fast making predictions. However, the model accuracy on its own was not really helpign to much to distinguish those models that would perform better (less false positives) on videos, so they had to be verified visually on images and videos.
+
+A few actions have been taken in order to reduce the number of false positives.
+
+On one hand, `svc.decision_function` has been used instead of `svc.predict` ([`finder.py:36-43 (find_cars)` ](src/helpers/finder.py)), which returns the distance of the samples X to the separating hyperplane. That distance is then thresholded so that a match is only considered if the distance is greater than 0.6, while the behavior implemented in `svc.predict` would consider a match anything that is above 0.
+
+On the other hand, a round of hard negative mining has been done with one of the latest versions of the model (already refined and adjusted using other methods), on each of the 3 short videos available in this project under `input/videos` (the one provided in the initial project and two more I added with problematic portions of the video). That was done automatically with the `extract_false_positives` function in the [Video Processing Notebook](src/notebooks/Video%20Processing.ipynb), that would consider any detection on the left 60% side of the video a false positive (as there are no cars there), and save them as `png` non-vehicle images that could then be used to retrain the model.
+
+In total, `428` new images were produced and can be found it [`input\images\dataset\non-vehicles\falses-short`](input\images\dataset\non-vehicles\falses-short). After adding them, there were a total of `8792` (`48.34 %`) car imags and `9396` (`51.66 %`) non-car images. In order to rebalance the dataset, `604` car images need to be added as well, alghouth that difference is not too big. In order to make the model perform better on the project's video, where it had a harder time detecting the white car than it had to detect the black one, `434` white/light car images had been selected from the existing ones and will be added to the car images set after flipping them horitzontally and slightly incresing their brightness, from those `434` flipped images, `170` will be selected randomly and also added to the car set after incresing their contrast.
+
 
 ### Video Implementation
 
