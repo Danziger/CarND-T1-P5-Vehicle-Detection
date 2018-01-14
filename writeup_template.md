@@ -60,7 +60,14 @@ Here is an example using the `YCrCb` color space and HOG parameters of `orientat
 
 #### 2. Explain how you settled on your final choice of HOG parameters.
 
-I tried various combinations of parameters and...
+As the results of the example classifiers that we saw on the lectures were already quite accurate and I had alreday played around with HOG's params there, I just used those when I created my new model, although I tried various other options, as I will explain in the next point.
+
+I didn't write down the whole set of combinations that I tried, but the one that worked the best with all 3 channels of HSV were:
+- `9` orientations.
+- `12` pixels per cell.
+- `2` cells per block
+
+However, I end up using a different color space (HLS) and assuming those values would still work good with it, which I actually verified by visually inspecting the results on the test video.
 
 
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
