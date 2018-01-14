@@ -93,8 +93,10 @@ All but `GaussianNB` produced models with accuracies above 95% and the `SVC` wit
 
 I finally decided to use `LinearSVC` with `loss="hinge"` as it was getting a 98.59% accuracy while training and predicting in a relatively short time.
 
-### Sliding Window Search
+Later, by checking the results produced by this model on video, I tried training it again using different color spaces: RGB, HSV, LUV, HLS, YUV and YCR_CB (YCrCb) and saw HLS was the one producing less false positives, so I replaced HSV with it.
 
+
+### Sliding Window Search
 
 #### 1. Describe how (and identify where in your code) you implemented a sliding window search. How did you decide what scales to search and how much to overlap windows?
 
