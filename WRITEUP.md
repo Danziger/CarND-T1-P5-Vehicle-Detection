@@ -146,7 +146,9 @@ On one hand, `svc.decision_function` has been used instead of `svc.predict` ([`f
 
 On the other hand, a round of hard negative mining has been done with one of the latest versions of the model (already refined and adjusted using other methods), on each of the 3 short videos available in this project under `input/videos` (the one provided in the initial project and two more I added with problematic portions of the video). That was done automatically with the `extract_false_positives` function in the [Video Processing Notebook](src/notebooks/Video%20Processing.ipynb), that would consider any detection on the left 60% side of the video a false positive (as there are no cars there), and save them as `png` non-vehicle images that could then be used to retrain the model.
 
-In total, `428` new images were produced and can be found it [`input\images\dataset\non-vehicles\falses-short`](input\images\dataset\non-vehicles\falses-short). After adding them, there were a total of `8792` (`48.34 %`) car imags and `9396` (`51.66 %`) non-car images. In order to rebalance the dataset, `604` car images need to be added as well, alghouth that difference is not too big. In order to make the model perform better on the project's video, where it had a harder time detecting the white car than it had to detect the black one, `434` white/light car images had been selected from the existing ones and will be added to the car images set after flipping them horitzontally.
+Initially, `428` new images were produced and can be found it [`input\images\dataset\non-vehicles\falses-short`](input\images\dataset\non-vehicles\falses-short). After adding them, there were a total of `8792` (`48.34 %`) car imags and `9396` (`51.66 %`) non-car images. In order to rebalance the dataset, `604` car images need to be added as well, alghouth that difference is not too big. In order to make the model perform better on the project's video, where it had a harder time detecting the white car than it had to detect the black one, `434` white/light car images had been selected from the existing ones and will be added to the car images set after flipping them horitzontally.
+
+However, that was not enough to stop getting false positives on the left side of the road on the full video, especially in the beginning of the videos, that doesn't appear in the short ones, where there are areas with grass and flowers, that is, bright colors. Therefore, another round of hard negative mining was done with the whole full video, generating `XXX` images that were added to the training set.
 
 
 ### Video Implementation
@@ -191,7 +193,27 @@ The final result on a video will look like this:
 
 ### Discussion
 
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+##### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+As mentioned multiple times, even after adopting plenty of different possible solutions to avoid false positives, such as hard negative mining and subtle training set augmentation in general, thresholding the predictions, thresholding and averaging the heatmaps... A lot of false detections are produced. That also means that it is hard to find values for the thresholds that find a good balance between filtering out false positives and not missing cars.
+
+Also, all those params are very specific to this particular video. What would happen if in a different one we are doing 50 km/h and a car overtakes us doing 200 km/h? Wouldn't the pipeline threshold be too restrictive to catch it? Probably, and we might argue that it doesn't really matter because that car will be gone in a couple of seconds and because that scenario might be unlikely.
+
+Anyway, it is true that the dataset used to generate the model is not too big, so this might not generalise properly for other videos, as we can imagine after seeing the difficulties to filter out false positives and properly detect the white car in this project. That could be solve by either using a bigger dataset or artificially augmenting the current one (or a combination of both), at the cost of training speed.
+
+Also, more features might be needed in order to improve the real accuracy of the model, which would also make both training and predicting slower. Maybe we could even use more than one color space to generate our feature vectors or create an [ensable](http://scikit-learn.org/stable/modules/ensemble.html) using multiple submodels.
+
+Talking about speed, there are a few things we could do to improve either training speed and prediction speed.
+
+Both could be speeded up by using a different hog function. For example, instead of using `skimage.feature.hog`, we could use [`cv2.HOGDescriptor`](https://docs.opencv.org/3.2.0/d5/d33/structcv_1_1HOGDescriptor.html).
+
+To improve just the former, we could look for different libraries that are faster, but that's already one of the reasons I use `LinearSVC`, as it is the fastest classifier of the ones I tried. We might find some other that can be run on GPU though.
+
+To improve the later, we can try to [reduce the dimensionality of our feature vectors](http://scikit-learn.org/stable/modules/unsupervised_reduction.html), which we could even [do automatically using GridSearchCV](http://scikit-learn.org/stable/auto_examples/plot_compare_reduction.html).
+
+Also, we could implement hog subsampling, as explained in the lectures, as HOG is expensive to compute, and right now we are doing it for every window. Moreover, the number of windows could be reduced by reducing the overlaping percentage, as right now we usually have multiple detections for a single car as the windows are quite close from one another.
+
+We could also try to improve vehicle tracking by actually keeping track of their location and average change in position, so that we could even predict their position if, for example, one car is hidden for a while by another one that is overtaking it. That would allow us to improve filtering by adjusting the hotmap threshold dinamically based on the distance of the detections candidates to one of the existing bounding boxes.
+
+However, I think neural networks are more robust and performant than these techniques, so it might be better to take that approach. For example, [YOLO](https://pjreddie.com/darknet/yolo/) can perform real-time object detection on a way wider variety of objects.
 
