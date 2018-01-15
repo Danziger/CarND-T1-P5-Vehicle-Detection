@@ -8,9 +8,10 @@ CarND · T1 · P5 · Vehicle Detection Project Writeup
 [image2]: ./output/images/002%20-%20Non%20Cars.png "Non Cars Examples"
 [image3]: ./output/images/003%20-%20Hog%20Car.png "Hog Car Example"
 [image4]: ./output/images/004%20-%20Hog%20Non%20Car.png "Hog Non Car Example"
+[image5]: ./output/images/008%20-%20All%20Grids.jpg "All Grids"
+[image6]: ./output/images/009%20-%20Raw%20Detections.jpg "Raw Detections"
 
-[image3]: ./examples/sliding_windows.jpg
-[image4]: ./examples/sliding_window.jpg
+
 
 [image5]: ./examples/bboxes_and_heat.png
 [image6]: ./examples/labels_map.png
@@ -109,9 +110,9 @@ I created 3 window grids of different sizes:
 
 <table>
   <tr>
-    <td><img src="" alt="" /></td>
-    <td><img src="" alt="" /></td>
-    <td><img src="" alt="" /></td>
+    <td><img src="output/images/005 - XS Grid.jpg" alt="XS Grid" /></td>
+    <td><img src="output/images/006 - S Grid.jpg" alt="S Grid" /></td>
+    <td><img src="output/images/007 - M Grid.jpg" alt="M Grid" /></td>
   </tr>
   <tr>
     <td>XS - `64px` - `50% overlap`</td>
@@ -122,7 +123,7 @@ I created 3 window grids of different sizes:
 
 And this is how all 3 come together:
 
-![alt text][image3]
+![All Grids][image5]
 
 This was done by trial and error by inspecting some example frames from the video and finding positions, dimensions and overlap percentages that produced grids that could fit the locations and dimensions of the cars on those example frames, as can be seen in [Sliding Window Setup](src/notebooks/Sliding%20Window%20Setup.ipynb) step by step.
 
@@ -139,7 +140,7 @@ Ultimately I searched on 3 scales using HLS 3-channel HOG features plus spatiall
 
 Here are some example predictions before filtering them with heatmaps, as returned by [`finder.py:10-45 (find_cars)` ](src/helpers/finder.py):
 
-![alt text][image4]
+![Raw Detections][image6]
 
 As mentioned before, plenty of different classifiers, params and color spaces have been considered and tested in order to generate a model that is either accurate and fast making predictions. However, the model accuracy on its own was not really helpign to much to distinguish those models that would perform better (less false positives) on videos, so they had to be verified visually on images and videos.
 
@@ -150,9 +151,6 @@ On one hand, `svc.decision_function` has been used instead of `svc.predict` ([`f
 On the other hand, a round of hard negative mining has been done with one of the latest versions of the model (already refined and adjusted using other methods), on each of the 3 short videos available in this project under `input/videos` (the one provided in the initial project and two more I added with problematic portions of the video). That was done automatically with the `extract_false_positives` function in the [Video Processing Notebook](src/notebooks/Video%20Processing.ipynb), that would consider any detection on the left 60% side of the video a false positive (as there are no cars there), and save them as `png` non-vehicle images that could then be used to retrain the model.
 
 In total, `428` new images were produced and can be found it [`input\images\dataset\non-vehicles\falses-short`](input\images\dataset\non-vehicles\falses-short). After adding them, there were a total of `8792` (`48.34 %`) car imags and `9396` (`51.66 %`) non-car images. In order to rebalance the dataset, `604` car images need to be added as well, alghouth that difference is not too big. In order to make the model perform better on the project's video, where it had a harder time detecting the white car than it had to detect the black one, `434` white/light car images had been selected from the existing ones and will be added to the car images set after flipping them horitzontally.
-
-
-and slightly incresing their brightness, from those `434` flipped images, `170` will be selected randomly and also added to the car set after incresing their contrast.
 
 
 ### Video Implementation
