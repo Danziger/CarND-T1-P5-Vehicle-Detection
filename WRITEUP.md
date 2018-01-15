@@ -155,7 +155,9 @@ However, that was not enough to stop getting false positives on the left side of
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
 
-Here's a [link to my video result](output/videos/004%20-%20project%20Video%20(Full).mp4)
+Here's a [link to my video result](output/videos/004%20-%20Project%20Video%20(Full).mp4).
+
+Videos 4 and 6, trained with slightly different traning data and filtering parameters, also produce acceptable results.
 
 
 #### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
