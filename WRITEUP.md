@@ -14,7 +14,7 @@ CarND · T1 · P5 · Vehicle Detection Project Writeup
 [image8]: ./output/images/011%20-%20Thresholded%20Heatmaps.png "Thresholded Heatmaps"
 [image9]: ./output/images/012%20-%20Detected%20Labels.png "Detected Labels"
 [image10]: ./output/images/013%20-%20Detected%20Boxes.png "Detected Boxes"
-[image11]: ./output/images/014%20-%20Final%20Result.jpg "Final Result"
+[image11]: ./output/images/014%20-%20Final%20Result.png "Final Result"
 
 
 Project Goals
