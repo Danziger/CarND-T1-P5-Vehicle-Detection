@@ -148,7 +148,7 @@ On the other hand, a round of hard negative mining has been done with one of the
 
 Initially, `428` new images were produced and can be found it [`input\images\dataset\non-vehicles\falses-short`](input\images\dataset\non-vehicles\falses-short). After adding them, there were a total of `8792` (`48.34 %`) car imags and `9396` (`51.66 %`) non-car images. In order to rebalance the dataset, `604` car images need to be added as well, alghouth that difference is not too big. In order to make the model perform better on the project's video, where it had a harder time detecting the white car than it had to detect the black one, `434` white/light car images had been selected from the existing ones and will be added to the car images set after flipping them horitzontally.
 
-However, that was not enough to stop getting false positives on the left side of the road on the full video, especially in the beginning of the videos, that doesn't appear in the short ones, where there are areas with grass and flowers, that is, bright colors. Therefore, another round of hard negative mining was done with the whole full video, generating `XXX` images that were added to the training set.
+However, that was not enough to stop getting false positives on the left side of the road on the full video, especially in the beginning of the videos, that doesn't appear in the short ones, where there are areas with grass and flowers, that is, bright colors. Therefore, another round of hard negative mining was done with the whole full video, generating `824` images that were added to the training set.
 
 
 ### Video Implementation
