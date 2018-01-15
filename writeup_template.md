@@ -4,10 +4,14 @@ CarND · T1 · P5 · Vehicle Detection Project Writeup
 
 [//]: # (Image References)
 
-[image1]: ./examples/car_not_car.png
-[image2]: ./examples/HOG_example.jpg
+[image1]: ./output/images/001%20-%20Cars.png "Cars Examples"
+[image2]: ./output/images/002%20-%20Non%20Cars.png "Non Cars Examples"
+[image3]: ./output/images/003%20-%20Hog%20Car.png "Hog Car Example"
+[image4]: ./output/images/004%20-%20Hog%20Non%20Car.png "Hog Non Car Example"
+
 [image3]: ./examples/sliding_windows.jpg
 [image4]: ./examples/sliding_window.jpg
+
 [image5]: ./examples/bboxes_and_heat.png
 [image6]: ./examples/labels_map.png
 [image7]: ./examples/output_bboxes.png
@@ -44,18 +48,19 @@ You're reading it!
 
 #### 1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
-The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
+The code for this step is contained in [Feature Extraction & Classifier Creation and Training.ipynb](src/notebooks/Feature%20Extraction%20%26%20Classifier%20Creation%20and%20Training.ipynb).
 
-I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
+Half way through [Section 1 - Load Data](src/notebooks/Feature%20Extraction%20%26%20Classifier%20Creation%20and%20Training.ipynb#1.-LOAD-DATA), there are some examples of raw car and non car images:
 
-![alt text][image1]
+![Cars Examples][image1]
 
-I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
+![Non Cars Examples][image2]
 
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(12, 12)` and `cells_per_block=(2, 2)`:
+Down below, in [Section 2 - Extract Features](src/notebooks/Feature%20Extraction%20%26%20Classifier%20Creation%20and%20Training.ipynb#2.-EXTRACT-FEATURES), I preview some HOG feature examples for a car and a non-car `HLS` image, generated with parameters `orientations=9`, `pixels_per_cell=(12, 12)` and `cells_per_block=(2, 2)`:
 
+![Hog Car Example][image3]
 
-![alt text][image2]
+![Hog Non Car Example][image4]
 
 
 #### 2. Explain how you settled on your final choice of HOG parameters.
