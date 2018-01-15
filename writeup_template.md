@@ -4,10 +4,19 @@ CarND · T1 · P5 · Vehicle Detection Project Writeup
 
 [//]: # (Image References)
 
-[image1]: ./examples/car_not_car.png
-[image2]: ./examples/HOG_example.jpg
-[image3]: ./examples/sliding_windows.jpg
-[image4]: ./examples/sliding_window.jpg
+[image1]: ./output/images/001%20-%20Cars.png "Cars Examples"
+[image2]: ./output/images/002%20-%20Non%20Cars.png "Non Cars Examples"
+[image3]: ./output/images/003%20-%20Hog%20Car.png "Hog Car Example"
+[image4]: ./output/images/004%20-%20Hog%20Non%20Car.png "Hog Non Car Example"
+[image5]: ./output/images/008%20-%20All%20Grids.jpg "All Grids"
+[image6]: ./output/images/009%20-%20Raw%20Detections.jpg "Raw Detections"
+[image7]: ./output/images/010%20-%20Heatmaps.jpg "Heatmaps"
+[image8]: ./output/images/011%20-%20Thresholded%20Heatmaps.jpg "Thresholded Heatmaps"
+[image9]: ./output/images/012%20-%20Detected%20Labels.jpg "Detected Labels"
+[image10]: ./output/images/013%20-%20Detected%20Boxes.jpg "Detected Boxes"
+[image11]: ./output/images/014%20-%20Final%20Result.jpg "Final Result"
+
+
 [image5]: ./examples/bboxes_and_heat.png
 [image6]: ./examples/labels_map.png
 [image7]: ./examples/output_bboxes.png
@@ -44,18 +53,19 @@ You're reading it!
 
 #### 1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
-The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
+The code for this step is contained in [Feature Extraction & Classifier Creation and Training.ipynb](src/notebooks/Feature%20Extraction%20%26%20Classifier%20Creation%20and%20Training.ipynb).
 
-I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
+Half way through [Section 1 - Load Data](src/notebooks/Feature%20Extraction%20%26%20Classifier%20Creation%20and%20Training.ipynb#1.-LOAD-DATA), there are some examples of raw car and non car images:
 
-![alt text][image1]
+![Cars Examples][image1]
 
-I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
+![Non Cars Examples][image2]
 
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(12, 12)` and `cells_per_block=(2, 2)`:
+Down below, in [Section 2 - Extract Features](src/notebooks/Feature%20Extraction%20%26%20Classifier%20Creation%20and%20Training.ipynb#2.-EXTRACT-FEATURES), I preview some HOG feature examples for a car and a non-car `HLS` image, generated with parameters `orientations=9`, `pixels_per_cell=(12, 12)` and `cells_per_block=(2, 2)`:
 
+![Hog Car Example][image3]
 
-![alt text][image2]
+![Hog Non Car Example][image4]
 
 
 #### 2. Explain how you settled on your final choice of HOG parameters.
@@ -104,9 +114,9 @@ I created 3 window grids of different sizes:
 
 <table>
   <tr>
-    <td><img src="" alt="" /></td>
-    <td><img src="" alt="" /></td>
-    <td><img src="" alt="" /></td>
+    <td><img src="output/images/005 - XS Grid.jpg" alt="XS Grid" /></td>
+    <td><img src="output/images/006 - S Grid.jpg" alt="S Grid" /></td>
+    <td><img src="output/images/007 - M Grid.jpg" alt="M Grid" /></td>
   </tr>
   <tr>
     <td>XS - `64px` - `50% overlap`</td>
@@ -117,7 +127,7 @@ I created 3 window grids of different sizes:
 
 And this is how all 3 come together:
 
-![alt text][image3]
+![All Grids][image5]
 
 This was done by trial and error by inspecting some example frames from the video and finding positions, dimensions and overlap percentages that produced grids that could fit the locations and dimensions of the cars on those example frames, as can be seen in [Sliding Window Setup](src/notebooks/Sliding%20Window%20Setup.ipynb) step by step.
 
@@ -134,7 +144,7 @@ Ultimately I searched on 3 scales using HLS 3-channel HOG features plus spatiall
 
 Here are some example predictions before filtering them with heatmaps, as returned by [`finder.py:10-45 (find_cars)` ](src/helpers/finder.py):
 
-![alt text][image4]
+![Raw Detections][image6]
 
 As mentioned before, plenty of different classifiers, params and color spaces have been considered and tested in order to generate a model that is either accurate and fast making predictions. However, the model accuracy on its own was not really helpign to much to distinguish those models that would perform better (less false positives) on videos, so they had to be verified visually on images and videos.
 
@@ -147,9 +157,6 @@ On the other hand, a round of hard negative mining has been done with one of the
 In total, `428` new images were produced and can be found it [`input\images\dataset\non-vehicles\falses-short`](input\images\dataset\non-vehicles\falses-short). After adding them, there were a total of `8792` (`48.34 %`) car imags and `9396` (`51.66 %`) non-car images. In order to rebalance the dataset, `604` car images need to be added as well, alghouth that difference is not too big. In order to make the model perform better on the project's video, where it had a harder time detecting the white car than it had to detect the black one, `434` white/light car images had been selected from the existing ones and will be added to the car images set after flipping them horitzontally.
 
 
-and slightly incresing their brightness, from those `434` flipped images, `170` will be selected randomly and also added to the car set after incresing their contrast.
-
-
 ### Video Implementation
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
@@ -159,20 +166,35 @@ Here's a [link to my video result](./project_video.mp4)
 
 #### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
-I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
-Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
+The video processing pipeline has been implemented in [Video Processing.ipynb](src/notebooks/Video%20Processing.ipynb), particularly in the `process_frame` function under [Section 2 - Create The Video Processing Pipeline](src/notebooks/Video%20Processing.ipynb#2.-CREATE-THE-VIDEO-PROCESSING-PIPELINE). Its steps are:
 
-Here are six frames and their corresponding heatmaps:
+- Record the positions of positive detections in each frame of the video.
+- Those new detections are appended to a `deque` inside the class `VehicleTracker`, also implemented in that same cell.
+- From all the positive detections inside that `deque`, it creates a heatmap and then thresholds that map to identify vehicle positions.
+- Next, the function `find_boxes` is called passing it those heatmaps. It will use `scipy.ndimage.measurements.label()` to identify individual blobs in it.
+- I then assumed each blob corresponded to a vehicle and constructed bounding boxes to cover the area of each of them.
 
-![alt text][image5]
+Here we can see the individual heatmaps from all the 8 images wes saw before, before applying a threshold:
 
-Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
+![Heatmaps][image7]
 
-![alt text][image6]
+After applying a threshold of 2 to each of them, they look like this:
 
-Here the resulting bounding boxes are drawn onto the last frame in the series:
+![Thresholded Heatmaps][image8]
 
-![alt text][image7]
+This is the output of  `scipy.ndimage.measurements.label()` on each of them:
+
+![Detected Labels][image9]
+
+And the resulting bounding boxes on each of them:
+
+![Detected Boxes][image10]
+
+In the video, those heatmaps are generated using the detections from the N last frames and the threshold is adjusted based on the amount of frames stored. That produces better detection even when a car is missed in one or even a few subsequent frames, and also helps removing false positives by tolerating higher threshold values.
+
+The final result on a video will look like this:
+
+![Final Result][image11]
 
 
 ### Discussion
