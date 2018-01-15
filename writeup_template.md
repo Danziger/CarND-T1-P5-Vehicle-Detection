@@ -10,7 +10,11 @@ CarND · T1 · P5 · Vehicle Detection Project Writeup
 [image4]: ./output/images/004%20-%20Hog%20Non%20Car.png "Hog Non Car Example"
 [image5]: ./output/images/008%20-%20All%20Grids.jpg "All Grids"
 [image6]: ./output/images/009%20-%20Raw%20Detections.jpg "Raw Detections"
-
+[image7]: ./output/images/010%20-%20Heatmaps.jpg "Heatmaps"
+[image8]: ./output/images/011%20-%20Thresholded%20Heatmaps.jpg "Thresholded Heatmaps"
+[image9]: ./output/images/012%20-%20Detected%20Labels.jpg "Detected Labels"
+[image10]: ./output/images/013%20-%20Detected%20Boxes.jpg "Detected Boxes"
+[image11]: ./output/images/014%20-%20Final%20Result.jpg "Final Result"
 
 
 [image5]: ./examples/bboxes_and_heat.png
@@ -162,20 +166,35 @@ Here's a [link to my video result](./project_video.mp4)
 
 #### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
-I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
-Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
+The video processing pipeline has been implemented in [Video Processing.ipynb](src/notebooks/Video%20Processing.ipynb), particularly in the `process_frame` function under [Section 2 - Create The Video Processing Pipeline](src/notebooks/Video%20Processing.ipynb#2.-CREATE-THE-VIDEO-PROCESSING-PIPELINE). Its steps are:
 
-Here are six frames and their corresponding heatmaps:
+- Record the positions of positive detections in each frame of the video.
+- Those new detections are appended to a `deque` inside the class `VehicleTracker`, also implemented in that same cell.
+- From all the positive detections inside that `deque`, it creates a heatmap and then thresholds that map to identify vehicle positions.
+- Next, the function `find_boxes` is called passing it those heatmaps. It will use `scipy.ndimage.measurements.label()` to identify individual blobs in it.
+- I then assumed each blob corresponded to a vehicle and constructed bounding boxes to cover the area of each of them.
 
-![alt text][image5]
+Here we can see the individual heatmaps from all the 8 images wes saw before, before applying a threshold:
 
-Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
+![Heatmaps][image7]
 
-![alt text][image6]
+After applying a threshold of 2 to each of them, they look like this:
 
-Here the resulting bounding boxes are drawn onto the last frame in the series:
+![Thresholded Heatmaps][image8]
 
-![alt text][image7]
+This is the output of  `scipy.ndimage.measurements.label()` on each of them:
+
+![Detected Labels][image9]
+
+And the resulting bounding boxes on each of them:
+
+![Detected Boxes][image10]
+
+In the video, those heatmaps are generated using the detections from the N last frames and the threshold is adjusted based on the amount of frames stored. That produces better detection even when a car is missed in one or even a few subsequent frames, and also helps removing false positives by tolerating higher threshold values.
+
+The final result on a video will look like this:
+
+![Final Result][image11]
 
 
 ### Discussion
