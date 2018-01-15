@@ -9,20 +9,12 @@ CarND · T1 · P5 · Vehicle Detection Project Writeup
 [image3]: ./output/images/003%20-%20Hog%20Car.png "Hog Car Example"
 [image4]: ./output/images/004%20-%20Hog%20Non%20Car.png "Hog Non Car Example"
 [image5]: ./output/images/008%20-%20All%20Grids.jpg "All Grids"
-[image6]: ./output/images/009%20-%20Raw%20Detections.jpg "Raw Detections"
-[image7]: ./output/images/010%20-%20Heatmaps.jpg "Heatmaps"
-[image8]: ./output/images/011%20-%20Thresholded%20Heatmaps.jpg "Thresholded Heatmaps"
-[image9]: ./output/images/012%20-%20Detected%20Labels.jpg "Detected Labels"
-[image10]: ./output/images/013%20-%20Detected%20Boxes.jpg "Detected Boxes"
+[image6]: ./output/images/009%20-%20Raw%20Detections.png "Raw Detections"
+[image7]: ./output/images/010%20-%20Heatmaps.png "Heatmaps"
+[image8]: ./output/images/011%20-%20Thresholded%20Heatmaps.png "Thresholded Heatmaps"
+[image9]: ./output/images/012%20-%20Detected%20Labels.png "Detected Labels"
+[image10]: ./output/images/013%20-%20Detected%20Boxes.png "Detected Boxes"
 [image11]: ./output/images/014%20-%20Final%20Result.jpg "Final Result"
-
-
-[image5]: ./examples/bboxes_and_heat.png
-[image6]: ./examples/labels_map.png
-[image7]: ./examples/output_bboxes.png
-[video1]: ./project_video.mp4
-
-[image0]: ./output/images/001%20-%20Example%20Output.png "Example Output"
 
 
 Project Goals
